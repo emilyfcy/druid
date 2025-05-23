@@ -14,7 +14,7 @@ public class IpFilteredStatLogger implements DruidDataSourceStatLogger {
     private static final Log LOG = LogFactory.getLog(IpFilteredStatLogger.class);
 
     // Delegate to the default logger implementation
-    private final DruidDataSourceStatLogger delegate;
+    private /*final*/ DruidDataSourceStatLogger delegate; // Made non-final to allow setting via setter
 
     public IpFilteredStatLogger() {
         // Initialize with the default Druid logger
@@ -59,5 +59,10 @@ public class IpFilteredStatLogger implements DruidDataSourceStatLogger {
         if (delegate != null) {
             delegate.setLogger(logger);
         }
+    }
+
+    // Package-private for testing purposes to inject a mock/spy delegate
+    void setDelegate(DruidDataSourceStatLogger delegate) {
+        this.delegate = (delegate != null) ? delegate : new DruidDataSourceStatLoggerImpl();
     }
 }
