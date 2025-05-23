@@ -1,7 +1,10 @@
 package com.alibaba.druid.spring.boot.demo;
 
+import com.alibaba.druid.support.http.filter.ClientIpCaptureFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 
 /**
  * @author lihengming<89921218@qq.com>
@@ -17,5 +20,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class DemoApplication {
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
+    }
+
+    @Bean
+    public FilterRegistrationBean<ClientIpCaptureFilter> clientIpCaptureFilterRegistrationBean() {
+        FilterRegistrationBean<ClientIpCaptureFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new ClientIpCaptureFilter());
+        registrationBean.addUrlPatterns("/*"); // Apply to all URLs
+        registrationBean.setName("clientIpCaptureFilter");
+        registrationBean.setOrder(1); // Set high precedence
+        return registrationBean;
     }
 }
